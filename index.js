@@ -3,6 +3,17 @@
 const args = process.argv
 const command = args[2]
 
+
+const fs = require('fs')
+let data
+try {
+	const data0 = fs.readFileSync('./data.json', 'utf8')
+	data = data0
+} catch (err) {
+	console.log('Se ha producido un error al leer')
+}
+const tasks = JSON.parse(data)["tasks"]
+
 function main() {
 	switch (command) {
 		case '--help':
@@ -14,6 +25,14 @@ function main() {
 			showVersion()
 			break
 
+		case 'list':
+			getTasks()
+			break
+
+		case 'show':
+			let idRequired = args[3]
+			getTaskById(idRequired)
+		break
 		// AQUÍ TU CÓDIGO PARA PROCESAR OTROS COMANDOS
 
 		default:
@@ -41,15 +60,31 @@ function showVersion() {
 }
 
 function getTasks() {
-	// AQUI TU CÓDIGO
+	tasks.forEach((item)=>{
+	let date = new Date(item["id"]).toUTCString()
+	let fecha = date.slice(5,11).toUpperCase()
+	let hora = date.slice(17,22)
+	let descripcion = item["body"]
+	let task = fecha +' '+hora + ": "+descripcion
+	console.log(task)
+	})
 }
 
 function getTaskById(id) {
-	// AQUI TU CÓDIGO
+	tasks.forEach((item)=>{
+		if(id === item["id"].toString()){
+			let date = new Date(item["id"]).toUTCString()
+			let fecha = date.slice(5,11).toUpperCase()
+			let hora = date.slice(17,22)
+			let descripcion = item["body"]
+			let task = fecha +' '+hora + ": "+descripcion
+			console.log(task)
+		}
+	})
 }
 
 function saveData(newData) {
-	// AQUI TU CÓDIGO
+	
 }
 
 function createTask(body) {
